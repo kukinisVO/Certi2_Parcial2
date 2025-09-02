@@ -12,7 +12,7 @@ public class APITests {
     @Test
     public void getBookingValidId(){
         RestAssured.baseURI = "https://restful-booker.herokuapp.com/booking/";
-        Response response = RestAssured.given().pathParam("id", "3812")
+        Response response = RestAssured.given().pathParam("id", "2118")
                 .when().get("{id}");
 
         response.then().assertThat().statusCode(200);
@@ -29,13 +29,13 @@ public class APITests {
         response.then().assertThat().body("$", hasKey("additionalneeds"));
 
 
-        response.then().assertThat().body("firstname", Matchers.equalTo("Leon"));
-        response.then().assertThat().body("lastname", Matchers.equalTo("Kennedy"));
-        response.then().assertThat().body("totalprice", Matchers.equalTo(111));
+        response.then().assertThat().body("firstname", Matchers.equalTo("Barabra"));
+        response.then().assertThat().body("lastname", Matchers.equalTo("Jhoqu"));
+        response.then().assertThat().body("totalprice", Matchers.equalTo(532));
         response.then().assertThat().body("depositpaid", Matchers.equalTo(true));
-        response.then().assertThat().body("bookingdates.checkin", Matchers.equalTo("2018-01-01"));
-        response.then().assertThat().body("bookingdates.checkout", Matchers.equalTo("2019-01-01"));
-        response.then().assertThat().body("additionalneeds", Matchers.equalTo("Magnum ammo"));
+        response.then().assertThat().body("bookingdates.checkin", Matchers.equalTo("2020-08-07"));
+        response.then().assertThat().body("bookingdates.checkout", Matchers.equalTo("2021-06-01"));
+        response.then().assertThat().body("additionalneeds", Matchers.equalTo("A bit of lov"));
     }
 
 
@@ -57,15 +57,15 @@ public class APITests {
         RestAssured.baseURI = "https://restful-booker.herokuapp.com";
 
         Booking booking = new Booking();
-        booking.setFirstname("Leon");
-        booking.setLastname("Kennedy");
+        booking.setFirstname("Barabra");
+        booking.setLastname("Jhoqu");
         booking.setTotalprice(111);
         booking.setDepositpaid(true);
-        booking.setAdditionalneeds("Magnum ammo");
+        booking.setAdditionalneeds("A bit of lov");
 
         Booking_Check dates = new Booking_Check();
-        dates.setCheckin("2018-01-01");
-        dates.setCheckout("2019-01-01");
+        dates.setCheckin("2020-08-07");
+        dates.setCheckout("2021-06-01");
         booking.setBookingdates(dates);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -130,14 +130,14 @@ public class APITests {
 
         RestAssured.baseURI = "https://restful-booker.herokuapp.com/booking/";
 
-        Booking booking = new Booking();
+        Booking_bad booking = new Booking_bad();
         booking.setFirstname(0);
         booking.setLastname(0);
         booking.setTotalprice(false);
         booking.setDepositpaid(0);
         booking.setAdditionalneeds(0);
 
-        Booking_Check dates = new Booking_Check();
+        Booking_BadCheck dates = new Booking_BadCheck();
         dates.setCheckin(true);
         dates.setCheckout(true);
         booking.setBookingdates(dates);
