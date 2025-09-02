@@ -12,7 +12,7 @@ public class APITests {
 
 
     @Test
-    public void getBookingValidId(){
+    public void getBookin_ID(){
         RestAssured.baseURI = "https://restful-booker.herokuapp.com/booking/";
         Response response = RestAssured.given().pathParam("id", "1044").when().get("{id}");
         response.then().assertThat().statusCode(200);
@@ -37,7 +37,7 @@ public class APITests {
     }
 
     @Test
-    public void getBookingInvalidId(){
+    public void getBookin_InvalidId(){
         RestAssured.baseURI = "https://restful-booker.herokuapp.com/booking/";
         Response response = RestAssured.given().pathParam("id", "10000").when().get("{id}");
         response.then().assertThat().statusCode(404);
@@ -46,7 +46,7 @@ public class APITests {
     }
 
     @Test
-    public  void PostBookingBlankOrNullData() throws JsonProcessingException {
+    public  void PostBookin_blank() throws JsonProcessingException {
 
         RestAssured.baseURI = "https://restful-booker.herokuapp.com/booking/";
 
@@ -74,7 +74,7 @@ public class APITests {
     }
 
     @Test
-    public  void PostBookingValidData() throws JsonProcessingException {
+    public  void PostBookin_valid() throws JsonProcessingException {
 
         RestAssured.baseURI = "https://restful-booker.herokuapp.com";
 
@@ -116,7 +116,7 @@ public class APITests {
 
 
     @Test
-    public  void PostBookingBadData() throws JsonProcessingException {
+    public  void PostBookin_invalid() throws JsonProcessingException {
 
         RestAssured.baseURI = "https://restful-booker.herokuapp.com/booking/";
 
