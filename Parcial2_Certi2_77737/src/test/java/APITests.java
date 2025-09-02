@@ -9,14 +9,13 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.Matchers.hasKey;
 
 public class APITests {
+
+
     @Test
     public void getBookingValidId(){
         RestAssured.baseURI = "https://restful-booker.herokuapp.com/booking/";
-        Response response = RestAssured.given().pathParam("id", "2118")
-                .when().get("{id}");
-
+        Response response = RestAssured.given().pathParam("id", "1044").when().get("{id}");
         response.then().assertThat().statusCode(200);
-
         response.then().log().body();
 
         response.then().assertThat().body("$", hasKey("firstname"));
@@ -28,7 +27,6 @@ public class APITests {
         response.then().assertThat().body("bookingdates", hasKey("checkout"));
         response.then().assertThat().body("$", hasKey("additionalneeds"));
 
-
         response.then().assertThat().body("firstname", Matchers.equalTo("Barabra"));
         response.then().assertThat().body("lastname", Matchers.equalTo("Jhoqu"));
         response.then().assertThat().body("totalprice", Matchers.equalTo(532));
@@ -38,16 +36,40 @@ public class APITests {
         response.then().assertThat().body("additionalneeds", Matchers.equalTo("A bit of lov"));
     }
 
-
     @Test
     public void getBookingInvalidId(){
         RestAssured.baseURI = "https://restful-booker.herokuapp.com/booking/";
-        Response response = RestAssured.given().pathParam("id", "10000")
-                .when().get("{id}");
-
+        Response response = RestAssured.given().pathParam("id", "10000").when().get("{id}");
         response.then().assertThat().statusCode(404);
-
         response.then().log().body();
+
+    }
+
+    @Test
+    public  void PostBookingBlankOrNullData() throws JsonProcessingException {
+
+        RestAssured.baseURI = "https://restful-booker.herokuapp.com/booking/";
+
+        Booking booking = new Booking();
+        booking.setFirstname("");
+        booking.setLastname("");
+        booking.setTotalprice(null);
+        booking.setDepositpaid(null);
+        booking.setAdditionalneeds("");
+
+        Booking_Check dates = new Booking_Check();
+        dates.setCheckin("");
+        dates.setCheckout("");
+        booking.setBookingdates(dates);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String payload = mapper.writeValueAsString(booking);
+        System.out.println(payload);
+
+        Response response = RestAssured.given().accept(ContentType.JSON).body(payload).when().post();
+        response.then().log().body();
+        response.then().assertThat().statusCode(400);
+
 
     }
 
@@ -62,7 +84,6 @@ public class APITests {
         booking.setTotalprice(111);
         booking.setDepositpaid(true);
         booking.setAdditionalneeds("A bit of lov");
-
         Booking_Check dates = new Booking_Check();
         dates.setCheckin("2020-08-07");
         dates.setCheckout("2021-06-01");
@@ -93,37 +114,6 @@ public class APITests {
 
     }
 
-    @Test
-    public  void PostBookingBlankOrNullData() throws JsonProcessingException {
-
-        RestAssured.baseURI = "https://restful-booker.herokuapp.com/booking/";
-
-        Booking booking = new Booking();
-        booking.setFirstname("");
-        booking.setLastname("");
-        booking.setTotalprice(null);
-        booking.setDepositpaid(null);
-        booking.setAdditionalneeds("");
-
-        Booking_Check dates = new Booking_Check();
-        dates.setCheckin("");
-        dates.setCheckout("");
-        booking.setBookingdates(dates);
-
-        ObjectMapper mapper = new ObjectMapper();
-        String payload = mapper.writeValueAsString(booking);
-        System.out.println(payload);
-
-        Response response = RestAssured.given().accept(ContentType.JSON).body(payload)
-                .when().post();
-
-        response.then().log().body();
-
-        response.then().assertThat().statusCode(400);
-
-
-    }
-
 
     @Test
     public  void PostBookingBadData() throws JsonProcessingException {
@@ -146,11 +136,8 @@ public class APITests {
         String payload = mapper.writeValueAsString(booking);
         System.out.println(payload);
 
-        Response response = RestAssured.given().accept(ContentType.JSON).body(payload)
-                .when().post();
-
+        Response response = RestAssured.given().accept(ContentType.JSON).body(payload).when().post();
         response.then().log().body();
-
         response.then().assertThat().statusCode(400);
 
 
